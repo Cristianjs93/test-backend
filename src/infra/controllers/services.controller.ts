@@ -112,9 +112,9 @@ export class ServicesController {
     description: 'Service deleted successfully',
     example: 'Service deleted successfully',
   })
-  softDelete(@Param('id') id: string): Promise<string> {
+  async softDelete(@Param('id') id: string): Promise<string> {
     try {
-      return this.servicesService.softDelete(Number(id));
+      return await this.servicesService.softDelete(Number(id));
     } catch (error) {
       throw error;
     }
@@ -131,7 +131,7 @@ export class ServicesController {
   })
   async restore(@Param('id') id: string): Promise<string> {
     try {
-      return this.servicesService.restore(Number(id));
+      return await this.servicesService.restore(Number(id));
     } catch (error) {
       throw error;
     }
