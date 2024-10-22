@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 
 describe('UsersController', () => {
-  let usersController: UsersController;
-  let usersService: UsersService;
+  let controller: UsersController;
+  let service: UsersService;
 
   const mockUsersService = {
     findAll: jest.fn(),
@@ -35,16 +35,16 @@ describe('UsersController', () => {
       ],
     }).compile();
 
-    usersController = module.get<UsersController>(UsersController);
-    usersService = module.get<UsersService>(UsersService);
+    controller = module.get<UsersController>(UsersController);
+    service = module.get<UsersService>(UsersService);
   });
 
   describe('findAll', () => {
-    it('should throw a InternalServerErrorException ', async () => {
+    it('should throw a InternalServerErrorException', async () => {
       mockUsersService.findAll.mockRejectedValue(
         new InternalServerErrorException('Error fetching users'),
       );
-      await expect(usersController.findAll()).rejects.toThrow(
+      await expect(controller.findAll()).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -54,7 +54,7 @@ describe('UsersController', () => {
         { id: 1, name: 'Cristian', email: 'cristian@example.com' },
       ];
       mockUsersService.findAll.mockResolvedValue(result);
-      await expect(usersController.findAll()).resolves.toEqual(result);
+      await expect(controller.findAll()).resolves.toEqual(result);
     });
   });
 
@@ -63,7 +63,7 @@ describe('UsersController', () => {
       mockUsersService.findOne.mockRejectedValue(
         new InternalServerErrorException('Error fetching the user'),
       );
-      await expect(usersController.findOne('1')).rejects.toThrow(
+      await expect(controller.findOne('1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -73,24 +73,20 @@ describe('UsersController', () => {
       mockUsersService.findOne.mockRejectedValue(
         new NotFoundException(`User with ID ${id} not found`),
       );
-      await expect(usersController.findOne(id)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(controller.findOne(id)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw a ForbiddenException', async () => {
       mockUsersService.findOne.mockRejectedValue(
         new ForbiddenException(`You can only search your own account`),
       );
-      await expect(usersController.findOne('1')).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(controller.findOne('1')).rejects.toThrow(ForbiddenException);
     });
 
     it('should return a user by ID', async () => {
       const result = { id: 1, name: 'cristian', email: 'cristian@example.com' };
       mockUsersService.findOne.mockResolvedValue(result);
-      await expect(usersController.findOne('1')).resolves.toEqual(result);
+      await expect(controller.findOne('1')).resolves.toEqual(result);
     });
   });
 
@@ -105,7 +101,7 @@ describe('UsersController', () => {
       mockUsersService.create.mockRejectedValue(
         new InternalServerErrorException('Error creating user'),
       );
-      await expect(usersController.create(newUser)).rejects.toThrow(
+      await expect(controller.create(newUser)).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -119,7 +115,7 @@ describe('UsersController', () => {
       };
       const result = { id: 1, ...newUser };
       mockUsersService.create.mockResolvedValue(result);
-      expect(await usersController.create(newUser)).toEqual(result);
+      await expect(controller.create(newUser)).resolves.toEqual(result);
     });
   });
 
@@ -129,7 +125,7 @@ describe('UsersController', () => {
       mockUsersService.update.mockRejectedValue(
         new InternalServerErrorException('Error updating user'),
       );
-      await expect(usersController.update('1', updateData)).rejects.toThrow(
+      await expect(controller.update('1', updateData)).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -140,7 +136,7 @@ describe('UsersController', () => {
       mockUsersService.update.mockRejectedValue(
         new NotFoundException(`User with ID ${id} not found`),
       );
-      await expect(usersController.update(id, updateData)).rejects.toThrow(
+      await expect(controller.update(id, updateData)).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -150,7 +146,7 @@ describe('UsersController', () => {
       mockUsersService.update.mockRejectedValue(
         new ForbiddenException(`You can only delete your own account`),
       );
-      await expect(usersController.update('1', updateData)).rejects.toThrow(
+      await expect(controller.update('1', updateData)).rejects.toThrow(
         ForbiddenException,
       );
     });
@@ -159,9 +155,7 @@ describe('UsersController', () => {
       const updateData = { name: 'Cristian' };
       const result = { id: 1, name: 'Cristian', email: 'cristian@example.com' };
       mockUsersService.update.mockResolvedValue(result);
-      await expect(usersController.update('1', updateData)).resolves.toEqual(
-        result,
-      );
+      await expect(controller.update('1', updateData)).resolves.toEqual(result);
     });
   });
 
@@ -170,7 +164,7 @@ describe('UsersController', () => {
       mockUsersService.softDelete.mockRejectedValue(
         new InternalServerErrorException('Error deleting user'),
       );
-      await expect(usersController.softDelete('1')).rejects.toThrow(
+      await expect(controller.softDelete('1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -180,7 +174,7 @@ describe('UsersController', () => {
       mockUsersService.softDelete.mockRejectedValue(
         new NotFoundException(`User with ID ${id} not found`),
       );
-      await expect(usersController.softDelete(id)).rejects.toThrow(
+      await expect(controller.softDelete(id)).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -189,7 +183,7 @@ describe('UsersController', () => {
       mockUsersService.softDelete.mockRejectedValue(
         new ForbiddenException(`You can only delete your own account`),
       );
-      await expect(usersController.softDelete('1')).rejects.toThrow(
+      await expect(controller.softDelete('1')).rejects.toThrow(
         ForbiddenException,
       );
     });
@@ -197,7 +191,7 @@ describe('UsersController', () => {
     it('should soft delete a user', async () => {
       const result = 'User deleted successfully';
       mockUsersService.softDelete.mockResolvedValue(result);
-      await expect(usersController.softDelete('1')).resolves.toEqual(result);
+      await expect(controller.softDelete('1')).resolves.toEqual(result);
     });
   });
 
@@ -206,7 +200,7 @@ describe('UsersController', () => {
       mockUsersService.restore.mockRejectedValue(
         new InternalServerErrorException('Error restoring user'),
       );
-      await expect(usersController.restore('1')).rejects.toThrow(
+      await expect(controller.restore('1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -218,24 +212,20 @@ describe('UsersController', () => {
           `User with ID ${id} not found or not soft deleted`,
         ),
       );
-      await expect(usersController.restore(id)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(controller.restore(id)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw a ForbiddenException', async () => {
       mockUsersService.restore.mockRejectedValue(
         new ForbiddenException(`You can only restore your own account`),
       );
-      await expect(usersController.restore('1')).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(controller.restore('1')).rejects.toThrow(ForbiddenException);
     });
 
     it('should restore a user', async () => {
       const result = 'User restored successfully';
       mockUsersService.restore.mockResolvedValue(result);
-      await expect(usersController.restore('1')).resolves.toEqual(result);
+      await expect(controller.restore('1')).resolves.toEqual(result);
     });
   });
 
@@ -244,7 +234,7 @@ describe('UsersController', () => {
       mockUsersService.assignService.mockRejectedValue(
         new InternalServerErrorException('Error assigning service to user'),
       );
-      await expect(usersController.assignService('1', '1')).rejects.toThrow(
+      await expect(controller.assignService('1', '1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -254,7 +244,7 @@ describe('UsersController', () => {
       mockUsersService.assignService.mockRejectedValue(
         new NotFoundException(`User with ID ${id} not found`),
       );
-      await expect(usersController.assignService(id, '1')).rejects.toThrow(
+      await expect(controller.assignService(id, '1')).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -265,7 +255,7 @@ describe('UsersController', () => {
           `You can only assign services to your own account`,
         ),
       );
-      await expect(usersController.assignService('1', '1')).rejects.toThrow(
+      await expect(controller.assignService('1', '1')).rejects.toThrow(
         ForbiddenException,
       );
     });
@@ -274,7 +264,7 @@ describe('UsersController', () => {
       mockUsersService.assignService.mockRejectedValue(
         new ForbiddenException(`Amazing service is already assigned`),
       );
-      await expect(usersController.assignService('1', '1')).rejects.toThrow(
+      await expect(controller.assignService('1', '1')).rejects.toThrow(
         ForbiddenException,
       );
     });
@@ -282,9 +272,7 @@ describe('UsersController', () => {
     it('should assign services to a user', async () => {
       const result = 'Amazing service has been assigned to user services';
       mockUsersService.assignService.mockResolvedValue(result);
-      await expect(usersController.assignService('1', '1')).resolves.toEqual(
-        result,
-      );
+      await expect(controller.assignService('1', '1')).resolves.toEqual(result);
     });
   });
 
@@ -293,7 +281,7 @@ describe('UsersController', () => {
       mockUsersService.removeService.mockRejectedValue(
         new InternalServerErrorException('Error removing service from user'),
       );
-      await expect(usersController.removeService('1', '1')).rejects.toThrow(
+      await expect(controller.removeService('1', '1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -303,7 +291,7 @@ describe('UsersController', () => {
       mockUsersService.removeService.mockRejectedValue(
         new NotFoundException(`User with ID ${id} not found`),
       );
-      await expect(usersController.removeService(id, '1')).rejects.toThrow(
+      await expect(controller.removeService(id, '1')).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -314,7 +302,7 @@ describe('UsersController', () => {
           'Amazing service is not assigned to your services',
         ),
       );
-      await expect(usersController.removeService('1', '1')).rejects.toThrow(
+      await expect(controller.removeService('1', '1')).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -325,7 +313,7 @@ describe('UsersController', () => {
           `You can only remove services from your own account`,
         ),
       );
-      await expect(usersController.removeService('1', '1')).rejects.toThrow(
+      await expect(controller.removeService('1', '1')).rejects.toThrow(
         ForbiddenException,
       );
     });
@@ -333,9 +321,7 @@ describe('UsersController', () => {
     it('should remove service from user', async () => {
       const result = 'Amazing service has been removed from user services';
       mockUsersService.removeService.mockResolvedValue(result);
-      await expect(usersController.removeService('1', '1')).resolves.toEqual(
-        result,
-      );
+      await expect(controller.removeService('1', '1')).resolves.toEqual(result);
     });
   });
 });

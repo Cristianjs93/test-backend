@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 
 describe('ServicesController', () => {
-  let servicesController: ServicesController;
-  let servicesService: ServicesService;
+  let controller: ServicesController;
+  let service: ServicesService;
 
   const mockServicesService = {
     findAll: jest.fn(),
@@ -34,8 +34,8 @@ describe('ServicesController', () => {
       ],
     }).compile();
 
-    servicesController = module.get<ServicesController>(ServicesController);
-    servicesService = module.get<ServicesService>(ServicesService);
+    controller = module.get<ServicesController>(ServicesController);
+    service = module.get<ServicesService>(ServicesService);
   });
 
   describe('findAll', () => {
@@ -43,7 +43,7 @@ describe('ServicesController', () => {
       mockServicesService.findAll.mockRejectedValue(
         new InternalServerErrorException('Error fetching services'),
       );
-      await expect(servicesController.findAll()).rejects.toThrow(
+      await expect(controller.findAll()).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -59,7 +59,7 @@ describe('ServicesController', () => {
         },
       ];
       mockServicesService.findAll.mockResolvedValue(result);
-      await expect(servicesController.findAll()).resolves.toEqual(result);
+      await expect(controller.findAll()).resolves.toEqual(result);
     });
   });
 
@@ -68,7 +68,7 @@ describe('ServicesController', () => {
       mockServicesService.findOne.mockRejectedValue(
         new InternalServerErrorException('Error fetching the service'),
       );
-      await expect(servicesController.findOne('1')).rejects.toThrow(
+      await expect(controller.findOne('1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -78,9 +78,7 @@ describe('ServicesController', () => {
       mockServicesService.findOne.mockRejectedValue(
         new NotFoundException(`Service with ID ${id} not found`),
       );
-      await expect(servicesController.findOne(id)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(controller.findOne(id)).rejects.toThrow(NotFoundException);
     });
 
     it('should return a service by ID', async () => {
@@ -92,7 +90,7 @@ describe('ServicesController', () => {
         category: ServiceCategory.ENTERTAINMENT,
       };
       mockServicesService.findOne.mockResolvedValue(result);
-      await expect(servicesController.findOne('1')).resolves.toEqual(result);
+      await expect(controller.findOne('1')).resolves.toEqual(result);
     });
   });
 
@@ -107,7 +105,7 @@ describe('ServicesController', () => {
       mockServicesService.create.mockRejectedValue(
         new InternalServerErrorException('Error creating service'),
       );
-      await expect(servicesController.create(newService)).rejects.toThrow(
+      await expect(controller.create(newService)).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -121,7 +119,7 @@ describe('ServicesController', () => {
       };
       const result = { id: 1, ...newService };
       mockServicesService.create.mockResolvedValue(result);
-      expect(await servicesController.create(newService)).toEqual(result);
+      await expect(controller.create(newService)).resolves.toEqual(result);
     });
   });
 
@@ -131,7 +129,7 @@ describe('ServicesController', () => {
       mockServicesService.update.mockRejectedValue(
         new InternalServerErrorException('Error updating service'),
       );
-      await expect(servicesController.update('1', updateData)).rejects.toThrow(
+      await expect(controller.update('1', updateData)).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -142,7 +140,7 @@ describe('ServicesController', () => {
       mockServicesService.update.mockRejectedValue(
         new NotFoundException(`Service with ID ${id} not found`),
       );
-      await expect(servicesController.update(id, updateData)).rejects.toThrow(
+      await expect(controller.update(id, updateData)).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -151,9 +149,7 @@ describe('ServicesController', () => {
       const updateData = { name: 'Amazing' };
       const result = { id: 1, name: 'Amazing', description: 'description' };
       mockServicesService.update.mockResolvedValue(result);
-      await expect(servicesController.update('1', updateData)).resolves.toEqual(
-        result,
-      );
+      await expect(controller.update('1', updateData)).resolves.toEqual(result);
     });
   });
 
@@ -162,7 +158,7 @@ describe('ServicesController', () => {
       mockServicesService.softDelete.mockRejectedValue(
         new InternalServerErrorException('Error deleting service'),
       );
-      await expect(servicesController.softDelete('1')).rejects.toThrow(
+      await expect(controller.softDelete('1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -172,7 +168,7 @@ describe('ServicesController', () => {
       mockServicesService.softDelete.mockRejectedValue(
         new NotFoundException(`Service with ID ${id} not found`),
       );
-      await expect(servicesController.softDelete(id)).rejects.toThrow(
+      await expect(controller.softDelete(id)).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -180,7 +176,7 @@ describe('ServicesController', () => {
     it('should soft delete a service', async () => {
       const result = 'Service deleted successfully';
       mockServicesService.softDelete.mockResolvedValue(result);
-      await expect(servicesController.softDelete('1')).resolves.toEqual(result);
+      await expect(controller.softDelete('1')).resolves.toEqual(result);
     });
   });
 
@@ -189,7 +185,7 @@ describe('ServicesController', () => {
       mockServicesService.restore.mockRejectedValue(
         new InternalServerErrorException('Error restoring service'),
       );
-      await expect(servicesController.restore('1')).rejects.toThrow(
+      await expect(controller.restore('1')).rejects.toThrow(
         InternalServerErrorException,
       );
     });
@@ -201,15 +197,13 @@ describe('ServicesController', () => {
           `Service with ID ${id} not found or not soft deleted`,
         ),
       );
-      await expect(servicesController.restore(id)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(controller.restore(id)).rejects.toThrow(NotFoundException);
     });
 
     it('should restore a service', async () => {
       const result = 'Service restored successfully';
       mockServicesService.restore.mockResolvedValue(result);
-      await expect(servicesController.restore('1')).resolves.toEqual(result);
+      await expect(controller.restore('1')).resolves.toEqual(result);
     });
   });
 });
