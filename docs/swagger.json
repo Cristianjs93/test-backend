@@ -1,0 +1,861 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "summary": "Get all users. Restricted to admin role",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get all users successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "UsersController_create",
+        "summary": "Creates a new user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "summary": "Get a single user by Id. Users with user role can only find their own account",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a user successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_update",
+        "summary": "Updates a user. Users with user role can only update their own account",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "example": "User updated successfully"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_softDelete",
+        "summary": "Soft deletes a user. Users with user role can only delete their own account",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully",
+            "content": {
+              "application/json": {
+                "example": "User deleted successfully"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}/restore": {
+      "patch": {
+        "operationId": "UsersController_restore",
+        "summary": "Restores a user. Users with user role can only restore their own account",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User restored successfully",
+            "content": {
+              "application/json": {
+                "example": "User restored successfully"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/services/{serviceId}": {
+      "post": {
+        "operationId": "UsersController_assignService",
+        "summary": "Assigns service to user. Users with user role can only assign services to their own account",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serviceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service assigned successfully",
+            "content": {
+              "application/json": {
+                "example": "Gardening and landscaping service has been assigned to user services"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_removeService",
+        "summary": "Removes service from user. Users with user role can only remove services from their own account",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serviceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service removed successfully",
+            "content": {
+              "application/json": {
+                "example": "Gardening and landscaping service has been removed from user services"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/services": {
+      "get": {
+        "operationId": "ServicesController_findAll",
+        "summary": "Get all services",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get all services successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "ServicesController_create",
+        "summary": "Creates a new service. Restricted to admin role",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/services/{id}": {
+      "get": {
+        "operationId": "ServicesController_findOne",
+        "summary": "Get a single service by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a service successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "ServicesController_update",
+        "summary": "Updates a service. Restricted to admin role",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service updated successfully",
+            "content": {
+              "application/json": {
+                "example": "Service updated successfully"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "ServicesController_softDelete",
+        "summary": "Soft delete a service. Restricted to admin role",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service deleted successfully",
+            "content": {
+              "application/json": {
+                "example": "Service deleted successfully"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/services/{id}/restore": {
+      "patch": {
+        "operationId": "ServicesController_restore",
+        "summary": "Restores a service. Restricted to admin role",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service restored successfully",
+            "content": {
+              "application/json": {
+                "example": "Service restored successfully"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "summary": "Login a user and generates a JWT token",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Credentials for login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth",
+          "Auth"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Test Backend",
+    "description": "Users and Services Management",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User name",
+            "example": "Cristian"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "cristian@test.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Colombia2024*"
+          },
+          "role": {
+            "type": "string",
+            "description": "User role",
+            "example": "admin"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Creation date",
+            "example": "2024-10-22T14:00:47.857Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last update date",
+            "example": "2024-10-22T14:00:47.857Z"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Deletion date",
+            "example": "2024-10-22T14:00:47.857Z"
+          },
+          "services": {
+            "description": "Services associated with the user",
+            "example": [
+              {
+                "id": 11,
+                "name": "Gardening and landscaping",
+                "description": "The best environment in your home",
+                "cost": "60.99",
+                "category": "Home",
+                "createdAt": "2024-10-22T14:18:58.980Z",
+                "updatedAt": "2024-10-22T14:19:50.076Z",
+                "deletedAt": null
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "role",
+          "createdAt",
+          "updatedAt",
+          "deletedAt",
+          "services"
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User name",
+            "example": "Cristian"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "cristian@test.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Colombia2024*"
+          },
+          "role": {
+            "type": "string",
+            "description": "User role",
+            "example": "admin"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "role"
+        ]
+      },
+      "UserUpdateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User name",
+            "example": "Cristian"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "cristian@test.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Colombia2024*"
+          },
+          "role": {
+            "type": "string",
+            "description": "User role",
+            "example": "admin"
+          }
+        }
+      },
+      "ServiceDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Service name",
+            "example": "Football Training"
+          },
+          "description": {
+            "type": "string",
+            "description": "Service Description",
+            "example": "The Football Is Good For Training And Recreational Purposes"
+          },
+          "cost": {
+            "type": "number",
+            "description": "Service cost",
+            "example": 100.99
+          },
+          "category": {
+            "type": "string",
+            "description": "Service cost",
+            "example": "Entertainment"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "cost",
+          "category"
+        ]
+      },
+      "ServiceResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Service name",
+            "example": "Football Training"
+          },
+          "description": {
+            "type": "string",
+            "description": "Service Description",
+            "example": "The Football Is Good For Training And Recreational Purposes"
+          },
+          "cost": {
+            "type": "number",
+            "description": "Service cost",
+            "example": 100.99
+          },
+          "category": {
+            "type": "string",
+            "description": "Service cost",
+            "example": "Entertainment"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Creation date",
+            "example": "2024-10-22T14:00:47.857Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last update date",
+            "example": "2024-10-22T14:00:47.857Z"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Deletion date",
+            "example": "2024-10-22T14:00:47.857Z"
+          },
+          "users": {
+            "description": "Users associated with the service",
+            "example": [
+              {
+                "id": 1,
+                "name": "Roberta"
+              },
+              {
+                "id": 2,
+                "name": "Chad"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "cost",
+          "category",
+          "createdAt",
+          "updatedAt",
+          "deletedAt",
+          "users"
+        ]
+      },
+      "ServiceUpdateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Service name",
+            "example": "Football Training"
+          },
+          "description": {
+            "type": "string",
+            "description": "Service Description",
+            "example": "The Football Is Good For Training And Recreational Purposes"
+          },
+          "cost": {
+            "type": "number",
+            "description": "Service cost",
+            "example": 100.99
+          },
+          "category": {
+            "type": "string",
+            "description": "Service cost",
+            "example": "Entertainment"
+          }
+        }
+      },
+      "AuthDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email",
+            "example": "cristian@test.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "Colombia2024*"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "JWT token",
+            "example": {
+              "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwibmFtZSI6IkNyaXN0aWFuIiwiZW1haWwiOiJjcmlzdGlhbkB0ZXN0LmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTU5Mzk0MSwiZXhwIjoxNzI5NTk3NTQxfQ.ZutCgBPqoPbAl2SGU_imsoQWOhDAtj6EbnvxKenr1pg"
+            }
+          }
+        },
+        "required": [
+          "token"
+        ]
+      }
+    }
+  }
+}

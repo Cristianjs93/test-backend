@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@domain/entities/user.entity';
 import { ServicesService } from './services.service';
-import { UserDto } from '@infra/dto/user.dto';
+import { UserDto, UserResponseDto, UserUpdateDto } from '@infra/dto/user.dto';
 import { REQUEST } from '@nestjs/core';
 import { hashPassword } from '@utils/hashPassword';
 import { handleErrorResponse } from '@utils/handleErrorResponse';
@@ -24,7 +24,7 @@ export class UsersService {
     private request: any,
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserResponseDto[]> {
     try {
       const users = await this.usersRepository.find({
         relations: ['services'],
@@ -38,7 +38,7 @@ export class UsersService {
     }
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: number): Promise<UserResponseDto> {
     try {
       this.validateIdentityMatch(id, 'search');
       const user = await this.getUserOrThrow(id);
@@ -59,7 +59,7 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateData: Partial<User>): Promise<string> {
+  async update(id: number, updateData: UserUpdateDto): Promise<string> {
     try {
       this.validateIdentityMatch(id, 'update');
       await this.usersRepository.update(id, updateData);

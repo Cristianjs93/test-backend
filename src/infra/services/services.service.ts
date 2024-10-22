@@ -2,7 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Service } from '@domain/entities/service.entity';
-import { ServiceDto } from '@infra/dto/service.dto';
+import {
+  ServiceDto,
+  ServiceResponseDto,
+  ServiceUpdateDto,
+} from '@infra/dto/service.dto';
 import { handleErrorResponse } from '@utils/handleErrorResponse';
 
 @Injectable()
@@ -12,7 +16,7 @@ export class ServicesService {
     private servicesRepository: Repository<Service>,
   ) {}
 
-  async findAll(): Promise<Service[]> {
+  async findAll(): Promise<ServiceResponseDto[]> {
     try {
       return await this.servicesRepository.find({
         relations: ['users'],
@@ -23,7 +27,7 @@ export class ServicesService {
     }
   }
 
-  async findOne(id: number): Promise<Service> {
+  async findOne(id: number): Promise<ServiceResponseDto> {
     try {
       const service = await this.servicesRepository.findOne({
         where: { id },
@@ -48,7 +52,7 @@ export class ServicesService {
     }
   }
 
-  async update(id: number, updateData: Partial<Service>): Promise<string> {
+  async update(id: number, updateData: ServiceUpdateDto): Promise<string> {
     try {
       const service = await this.servicesRepository.findOne({ where: { id } });
       if (!service) {

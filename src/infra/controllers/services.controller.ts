@@ -14,16 +14,35 @@ import { RolesAuthGuard } from '@infra/auth/guards/roles-auth.guard';
 import { Roles } from '@infra/auth/decorators/roles.decorator';
 import { UserRole } from '@domain/common/roles.enum';
 import { ServicesService } from '@infra/services/services.service';
-import { Service } from '@domain/entities/service.entity';
-import { ServiceDto } from '@infra/dto/service.dto';
+import {
+  ServiceDto,
+  ServiceResponseDto,
+  ServiceUpdateDto,
+} from '@infra/dto/service.dto';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('services')
+@ApiTags('Services')
 @UseGuards(JwtAuthGuard, RolesAuthGuard)
+@ApiBearerAuth()
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
   @Get()
-  findAll(): Promise<Service[]> {
+  @ApiOperation({
+    summary: 'Get all services',
+  })
+  @ApiOkResponse({
+    description: 'Get all services successfully',
+    type: [ServiceDto],
+  })
+  findAll(): Promise<ServiceResponseDto[]> {
     try {
       return this.servicesService.findAll();
     } catch (error) {
@@ -32,7 +51,14 @@ export class ServicesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Service> {
+  @ApiOperation({
+    summary: 'Get a single service by Id',
+  })
+  @ApiOkResponse({
+    description: 'Get a service successfully',
+    type: [ServiceResponseDto],
+  })
+  findOne(@Param('id') id: string): Promise<ServiceResponseDto> {
     try {
       return this.servicesService.findOne(Number(id));
     } catch (error) {
@@ -42,7 +68,14 @@ export class ServicesController {
 
   @Post()
   @Roles(UserRole.ADMIN)
-  create(@Body() serviceData: ServiceDto): Promise<Service> {
+  @ApiOperation({
+    summary: 'Creates a new service. Restricted to admin role',
+  })
+  @ApiCreatedResponse({
+    description: 'Service created successfully',
+    type: [ServiceResponseDto],
+  })
+  create(@Body() serviceData: ServiceDto): Promise<ServiceResponseDto> {
     try {
       return this.servicesService.create(serviceData);
     } catch (error) {
@@ -52,9 +85,16 @@ export class ServicesController {
 
   @Put(':id')
   @Roles(UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Updates a service. Restricted to admin role',
+  })
+  @ApiOkResponse({
+    description: 'Service updated successfully',
+    example: 'Service updated successfully',
+  })
   update(
     @Param('id') id: string,
-    @Body() updateData: Partial<Service>,
+    @Body() updateData: ServiceUpdateDto,
   ): Promise<string> {
     try {
       return this.servicesService.update(Number(id), updateData);
@@ -65,7 +105,13 @@ export class ServicesController {
 
   @Delete(':id')
   @Roles(UserRole.ADMIN)
-  @Roles('admin')
+  @ApiOperation({
+    summary: 'Soft delete a service. Restricted to admin role',
+  })
+  @ApiOkResponse({
+    description: 'Service deleted successfully',
+    example: 'Service deleted successfully',
+  })
   softDelete(@Param('id') id: string): Promise<string> {
     try {
       return this.servicesService.softDelete(Number(id));
@@ -76,6 +122,13 @@ export class ServicesController {
 
   @Patch(':id/restore')
   @Roles(UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Restores a service. Restricted to admin role',
+  })
+  @ApiOkResponse({
+    description: 'Service restored successfully',
+    example: 'Service restored successfully',
+  })
   async restore(@Param('id') id: string): Promise<string> {
     try {
       return this.servicesService.restore(Number(id));
