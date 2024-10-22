@@ -42,9 +42,9 @@ export class ServicesController {
     description: 'Get all services successfully',
     type: [ServiceDto],
   })
-  findAll(): Promise<ServiceResponseDto[]> {
+  async findAll(): Promise<ServiceResponseDto[]> {
     try {
-      return this.servicesService.findAll();
+      return await this.servicesService.findAll();
     } catch (error) {
       throw error;
     }
@@ -58,9 +58,9 @@ export class ServicesController {
     description: 'Get a service successfully',
     type: [ServiceResponseDto],
   })
-  findOne(@Param('id') id: string): Promise<ServiceResponseDto> {
+  async findOne(@Param('id') id: string): Promise<ServiceResponseDto> {
     try {
-      return this.servicesService.findOne(Number(id));
+      return await this.servicesService.findOne(Number(id));
     } catch (error) {
       throw error;
     }
@@ -75,9 +75,9 @@ export class ServicesController {
     description: 'Service created successfully',
     type: [ServiceResponseDto],
   })
-  create(@Body() serviceData: ServiceDto): Promise<ServiceResponseDto> {
+  async create(@Body() serviceData: ServiceDto): Promise<ServiceResponseDto> {
     try {
-      return this.servicesService.create(serviceData);
+      return await this.servicesService.create(serviceData);
     } catch (error) {
       throw error;
     }
@@ -92,12 +92,12 @@ export class ServicesController {
     description: 'Service updated successfully',
     example: 'Service updated successfully',
   })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateData: ServiceUpdateDto,
   ): Promise<string> {
     try {
-      return this.servicesService.update(Number(id), updateData);
+      return await this.servicesService.update(Number(id), updateData);
     } catch (error) {
       throw error;
     }

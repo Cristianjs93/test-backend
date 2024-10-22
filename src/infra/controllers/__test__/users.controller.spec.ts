@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from './users.controller';
+import { UsersController } from '../users.controller';
 import { UsersService } from '@infra/services/users.service';
 import { UserRole } from '@domain/common/roles.enum';
 import {
@@ -117,7 +117,7 @@ describe('UsersController', () => {
         password: 'Colombia2024*',
         role: UserRole.ADMIN,
       };
-      const result = { id: '1', ...newUser };
+      const result = { id: 1, ...newUser };
       mockUsersService.create.mockResolvedValue(result);
       expect(await usersController.create(newUser)).toEqual(result);
     });

@@ -35,7 +35,7 @@ export class ServicesService {
         select: { users: { id: true, name: true } },
       });
       if (!service) {
-        throw new NotFoundException(`Service with ID ${id} not found.`);
+        throw new NotFoundException(`Service with ID ${id} not found`);
       }
       return service;
     } catch (error) {
