@@ -24,7 +24,13 @@ export class ServiceDto {
     description: 'Service cost',
     example: 100.99,
   })
-  @IsNumber()
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    {
+      message:
+        'Cost must be a valid decimal number with up to 2 decimal places',
+    },
+  )
   @IsNotEmpty({ message: 'Cost is required' })
   cost: number;
 

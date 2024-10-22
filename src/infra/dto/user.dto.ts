@@ -22,7 +22,8 @@ export class UserDto {
   email: string;
 
   @ApiProperty({
-    description: 'User password',
+    description:
+      'User password. Must be at least 8 characters long, include one uppercase letter, one lowercase letter, one digit, and one special character',
     example: 'Colombia2024*',
   })
   @Matches(
