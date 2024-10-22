@@ -19,3 +19,14 @@ export class ServiceDto {
   })
   category: ServiceCategory;
 }
+
+export class ServiceResponseDto {
+  name: string;
+  description: string;
+  cost: number;
+  category: ServiceCategory;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null;
+  users: [];
+}

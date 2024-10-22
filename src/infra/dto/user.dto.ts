@@ -25,3 +25,13 @@ export class UserDto {
   })
   role: UserRole;
 }
+
+export class UserResponseDto {
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null;
+  services: [];
+}

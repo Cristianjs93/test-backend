@@ -8,5 +8,6 @@ import { ServicesService } from '@infra/services/services.service';
   imports: [TypeOrmModule.forFeature([Service])],
   controllers: [ServicesController],
   providers: [ServicesService],
+  exports: [TypeOrmModule, ServicesService],
 })
 export class ServicesModule {}

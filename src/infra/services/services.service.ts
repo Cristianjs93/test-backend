@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Service } from '@domain/entities/service.entity';
 import { ServiceDto } from '@infra/dto/service.dto';
-import { errorValidation } from 'src/utils/errorValidation';
+import { handleErrorResponse } from '@utils/handleErrorResponse';
 
 @Injectable()
 export class ServicesService {
@@ -14,9 +14,12 @@ export class ServicesService {
 
   async findAll(): Promise<Service[]> {
     try {
-      return await this.servicesRepository.find({ relations: ['users'] });
+      return await this.servicesRepository.find({
+        relations: ['users'],
+        select: { users: { id: true, name: true } },
+      });
     } catch (error) {
-      errorValidation(error, 'Error fetching services');
+      handleErrorResponse(error, 'Error fetching services');
     }
   }
 
@@ -25,13 +28,14 @@ export class ServicesService {
       const service = await this.servicesRepository.findOne({
         where: { id },
         relations: ['users'],
+        select: { users: { id: true, name: true } },
       });
       if (!service) {
         throw new NotFoundException(`Service with ID ${id} not found.`);
       }
       return service;
     } catch (error) {
-      errorValidation(error, 'Error fetching the service');
+      handleErrorResponse(error, 'Error fetching the service');
     }
   }
 
@@ -40,7 +44,7 @@ export class ServicesService {
       const service = this.servicesRepository.create(createServiceDto);
       return await this.servicesRepository.save(service);
     } catch (error) {
-      errorValidation(error, 'Error creating service');
+      handleErrorResponse(error, 'Error creating service');
     }
   }
 
@@ -53,7 +57,7 @@ export class ServicesService {
       await this.servicesRepository.update(id, updateData);
       return 'Service updated successfully';
     } catch (error) {
-      errorValidation(error, 'Error updating service');
+      handleErrorResponse(error, 'Error updating service');
     }
   }
 
@@ -65,7 +69,7 @@ export class ServicesService {
       }
       return 'Service deleted successfully';
     } catch (error) {
-      errorValidation(error, 'Error deleting service');
+      handleErrorResponse(error, 'Error deleting service');
     }
   }
 
@@ -79,7 +83,17 @@ export class ServicesService {
       }
       return 'Service restored successfully';
     } catch (error) {
-      errorValidation(error, 'Error restoring service');
+      handleErrorResponse(error, 'Error restoring service');
     }
+  }
+
+  async getServiceOrThrow(id: number): Promise<any> {
+    const service = await this.servicesRepository.findOne({
+      where: { id },
+    });
+    if (!service) {
+      throw new NotFoundException(`Service with ID ${id} not found`);
+    }
+    return service;
   }
 }

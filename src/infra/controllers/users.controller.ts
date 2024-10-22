@@ -7,7 +7,12 @@ import {
   Delete,
   Patch,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '@infra/auth/guards/jwt-auth.guard';
+import { RolesAuthGuard } from '@infra/auth/guards/roles-auth.guard';
+import { Roles } from '@infra/auth/decorators/roles.decorator';
+import { UserRole } from '@domain/common/roles.enum';
 import { UsersService } from '@infra/services/users.service';
 import { User } from '@domain/entities/user.entity';
 import { UserDto } from '@infra/dto/user.dto';
@@ -17,6 +22,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesAuthGuard)
+  @Roles(UserRole.ADMIN)
   findAll(): Promise<User[]> {
     try {
       return this.usersService.findAll();
@@ -26,6 +33,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string): Promise<User> {
     try {
       return this.usersService.findOne(Number(id));
@@ -44,6 +52,7 @@ export class UsersController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
     @Body() updateData: Partial<User>,
@@ -56,6 +65,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   softDelete(@Param('id') id: string): Promise<string> {
     try {
       return this.usersService.softDelete(Number(id));
@@ -65,9 +75,42 @@ export class UsersController {
   }
 
   @Patch(':id/restore')
+  @UseGuards(JwtAuthGuard)
   async restore(@Param('id') id: string): Promise<string> {
     try {
       return this.usersService.restore(Number(id));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post(':userId/services/:serviceId')
+  @UseGuards(JwtAuthGuard)
+  async assignService(
+    @Param('userId') userId: string,
+    @Param('serviceId') serviceId: string,
+  ): Promise<string> {
+    try {
+      return await this.usersService.assignService(
+        Number(userId),
+        Number(serviceId),
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Delete(':userId/services/:serviceId')
+  @UseGuards(JwtAuthGuard)
+  async removeService(
+    @Param('userId') userId: string,
+    @Param('serviceId') serviceId: string,
+  ): Promise<string> {
+    try {
+      return await this.usersService.removeService(
+        Number(userId),
+        Number(serviceId),
+      );
     } catch (error) {
       throw error;
     }
