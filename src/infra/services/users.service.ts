@@ -88,7 +88,7 @@ export class UsersService {
       const result = await this.usersRepository.restore(id);
       if (result.affected === 0) {
         throw new NotFoundException(
-          `User with ID ${id} not found or not soft deleted.`,
+          `User with ID ${id} not found or not soft deleted`,
         );
       }
       return 'User restored successfully';

@@ -39,9 +39,9 @@ export class UsersController {
     description: 'Get all users successfully',
     type: [UserResponseDto],
   })
-  findAll(): Promise<UserResponseDto[]> {
+  async findAll(): Promise<UserResponseDto[]> {
     try {
-      return this.usersService.findAll();
+      return await this.usersService.findAll();
     } catch (error) {
       throw error;
     }
@@ -57,9 +57,9 @@ export class UsersController {
     description: 'Get a user successfully',
     type: [UserResponseDto],
   })
-  findOne(@Param('id') id: string): Promise<UserResponseDto> {
+  async findOne(@Param('id') id: string): Promise<UserResponseDto> {
     try {
-      return this.usersService.findOne(Number(id));
+      return await this.usersService.findOne(Number(id));
     } catch (error) {
       throw error;
     }
@@ -73,9 +73,9 @@ export class UsersController {
     description: 'User created successfully',
     type: [UserResponseDto],
   })
-  create(@Body() userData: UserDto): Promise<UserResponseDto> {
+  async create(@Body() userData: UserDto): Promise<UserResponseDto> {
     try {
-      return this.usersService.create(userData);
+      return await this.usersService.create(userData);
     } catch (error) {
       throw error;
     }
@@ -91,12 +91,12 @@ export class UsersController {
     description: 'User updated successfully',
     example: 'User updated successfully',
   })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateData: UserUpdateDto,
   ): Promise<string> {
     try {
-      return this.usersService.update(Number(id), updateData);
+      return await this.usersService.update(Number(id), updateData);
     } catch (error) {
       throw error;
     }
@@ -112,9 +112,9 @@ export class UsersController {
     description: 'User deleted successfully',
     example: 'User deleted successfully',
   })
-  softDelete(@Param('id') id: string): Promise<string> {
+  async softDelete(@Param('id') id: string): Promise<string> {
     try {
-      return this.usersService.softDelete(Number(id));
+      return await this.usersService.softDelete(Number(id));
     } catch (error) {
       throw error;
     }
@@ -132,7 +132,7 @@ export class UsersController {
   })
   async restore(@Param('id') id: string): Promise<string> {
     try {
-      return this.usersService.restore(Number(id));
+      return await this.usersService.restore(Number(id));
     } catch (error) {
       throw error;
     }

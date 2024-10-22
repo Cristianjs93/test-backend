@@ -12,6 +12,7 @@ A backend application built with Node.js, NestJS, TypeScript, PostgreSQL and Typ
   - [Usage](#usage)
   - [Environment](#environment)
   - [API Endpoints](#api-endpoints)
+  - [Testing](#testing)
   - [Screenshots](#screenshots)
   - [Contributing](#contributing)
 
@@ -84,7 +85,7 @@ A backend application built with Node.js, NestJS, TypeScript, PostgreSQL and Typ
    npm start
    ```
 
-9. The application will be running by default on (unless you specify another port in the `.env` file):
+9. The application will be running by default on port 3001 (unless you specify another port in the `.env` file):
 
    ```
    http://localhost:3001
@@ -93,10 +94,10 @@ A backend application built with Node.js, NestJS, TypeScript, PostgreSQL and Typ
 10. Swagger documentation is available on:
 
     ```
-    http://localhost:3001
+    http://localhost:3001/api
     ```
 
-11. You can use Postman or any other API testing tool to test the API endpoints. The first thing would be to create an admin user so that you can have access to all the functionality
+11. You can use Postman or any other API testing tool to test the API endpoints. The first thing would be to create an admin user so that you can have access to all the functionality. Here is an example body:
 
     ```
     {
@@ -134,6 +135,14 @@ Follow the `.env.example` file to add the required variables.
 | `services/:id`                       | PUT    | Updates a service         | `{ "name": "healthcare", "description": "description", "type": "Health", "cost": 100 }`              | `{ "id": 1, "name": "healthcare", ...}`       |
 | `services/:id`                       | DELETE | Soft deletes a service    |                                                                                                      | `Service deleted successfully`                |
 | `services/:id/restore`               | PATCH  | Restore a service         |                                                                                                      | `Service restored successfully`               |
+
+## Testing
+
+Unit tests were applied to controllers, services, and utility functions to ensure the functionality and correctness of the core logic. The tests are run using Jest, and can be executed with the following command:
+
+```bash
+npm run test
+```
 
 ## Screenshots
 
